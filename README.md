@@ -1,6 +1,6 @@
 ☕ CafeFinder – Nearby Cafe & Restaurant Discovery
 
-Discover great food and coffee near you.
+hrlloDiscover great food and coffee near you.
 
 CafeFinder is a full-stack web application that helps users discover nearby cafes and restaurants based on their food and drink preferences.
 
