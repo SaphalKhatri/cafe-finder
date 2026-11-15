@@ -1,6 +1,6 @@
 ☕ CafeFinder – Nearby Cafe & Restaurant Discovery
 
-Discover great food and coffee near you.
+new Discover great food and coffee near you.
 
 CafeFinder is a full-stack web application that helps users discover nearby cafes and restaurants based on their food and drink preferences.
 
@@ -154,6 +154,7 @@ Start the Vite development server:
 
 bash
 npm run dev
+
 
 
 
@@ -323,4 +324,4 @@ Purpose: Nearby Cafe & Restaurant Discovery
 
 This project is developed for educational and portfolio purposes.
 
-You may modify and extend it for your own learning and development projects.
+You may modify and extend it for your own learning and development projects.s
