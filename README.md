@@ -134,10 +134,7 @@ bash
 python manage.py runserver
 
 
-Backend will be available at:
 
-text
-http://127.0.0.1:8000/
 
 3. Frontend Setup (React + TypeScript)
 
@@ -159,10 +156,6 @@ bash
 npm run dev
 
 
-Frontend will typically be available at:
-
-text
-http://localhost:5173/
 
 🔑 Google Places API Configuration
 
