@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star, MapPin, Navigation, Clock, Coffee } from 'lucide-react';
+import { Star, MapPin, Navigation, Coffee } from 'lucide-react';
 import { type Place } from '../types';
 
 interface RestaurantCardProps {
