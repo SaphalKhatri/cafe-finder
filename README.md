@@ -1,333 +1,85 @@
-☕ CafeFinder – Nearby Cafe & Restaurant Discovery
+# ☕ CafeFinder
 
-hrlloDiscover great food and coffee near you.
+Find nearby cafes and restaurants by what you feel like eating or drinking.
 
-CafeFinder is a full-stack web application that helps users discover nearby cafes and restaurants based on their food and drink preferences.
+Type something like `coffee`, `momos`, or `coffee + pizza`, share your location, and CafeFinder shows matching places near you with ratings, distance, open/closed status, and Google Maps directions.
 
-Users can search for items such as Coffee, Pizza, Burger, Momos, Bakery, or multiple keywords like Coffee + Pizza. By sharing their current location, they can explore nearby restaurants with useful information such as ratings, addresses, reviews, distance, and directions.
+![alt text](image-2.png)
+## Features
 
-The application uses the Google Places API to retrieve real-time place information without maintaining a restaurant database.
+- Search by food or drink, including multiple keywords
+- Uses your browser location to find places nearby
+- Shows rating, review count, address, photo, distance, and open status
+- One-click directions in Google Maps
+- Filters for distance and rating
+- Responsive on desktop and mobile
 
-✨ Features
-Food & Drink Search: Search for cafes and restaurants using food or drink keywords.
-Multiple Keyword Search: Search for multiple items, such as Coffee + Pizza.
-Current Location Detection: Find nearby restaurants using browser geolocation.
-Restaurant Recommendations: View matching restaurants with available details.
-Restaurant Images: Display restaurant photos when available.
-Ratings & Reviews: View Google ratings and review counts when available.
-Distance Information: See how far restaurants are from your current location.
-Opening Status: Check whether a restaurant is open or closed when information is available.
-Google Maps Directions: Navigate to restaurants using Google Maps.
-Search Filters: Filter results by maximum distance, rating, and available restaurant categories.
-Responsive Design: Works on desktop, tablet, and mobile devices.
-No Database Required: Restaurant information is fetched dynamically from Google Places API.
-🛠️ Tech Stack
-Frontend
-React
-TypeScript
-Vite
-CSS
-Axios
-Browser Geolocation API
-Backend
-Python
-Django
-Django REST Framework
-Requests
-External API
-Google Places API (New)
-Configuration
-Environment variables (.env)
-Git and GitHub
-📁 Project Structure
-text
-CafeFinder/
-│
-├── backend/
-│   ├── config/
-│   │   ├── __init__.py
-│   │   ├── settings.py
-│   │   ├── urls.py
-│   │   └── ...
-│   │
-│   ├── places/
-│   │   ├── __init__.py
-│   │   ├── views.py
-│   │   ├── urls.py
-│   │   └── ...
-│   │
-│   ├── .env
-│   ├── .env.example
-│   ├── manage.py
-│   └── requirements.txt
-│
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── services/
-│   │   ├── App.tsx
-│   │   ├── main.tsx
-│   │   └── ...
-│   │
-│   ├── public/
-│   ├── package.json
-│   └── ...
-│
-├── .gitignore
-└── README.md
+## Tech Stack
 
-⚙️ Getting Started
+| Part | Tools |
+|------|-------|
+| Frontend | React, TypeScript, Vite, CSS, Axios |
+| Backend | Python, Django, Django REST Framework |
+| API | Google Places API (New) |
+| Other | Browser Geolocation API, `.env` config, Git/GitHub |
 
-Follow these instructions to run CafeFinder locally.
+## What I Built
 
-1. Clone the Repository
-bash
-git clone https://github.com/YOUR_USERNAME/CafeFinder.git
+- A REST API in Django that takes a search and a location, then returns clean JSON
+- Integration with the Google Places API, with results merged across multiple keywords and duplicates removed
+- A React + TypeScript frontend with loading, error, and empty states
+- Browser geolocation handling, including denied permissions
+- Secure API key handling: the key stays on the backend in `.env` and is never exposed to the frontend
 
-cd CafeFinder
+## How It Works
 
-2. Backend Setup (Django)
+```
+React (keywords + location) → Django API → Google Places API → cleaned JSON → React cards
+```
 
-Navigate to the backend directory:
+## Run Locally
 
-bash
+**Backend**
+```bash
 cd backend
-
-
-Create a virtual environment:
-
-bash
 python -m venv venv
-
-
-Activate the virtual environment.
-
-Windows:
-
-bash
-venv\Scripts\activate
-
-
-macOS / Linux:
-
-bash
-source venv/bin/activate
-
-
-Install the dependencies:
-
-bash
+venv\Scripts\activate        # macOS/Linux: source venv/bin/activate
 pip install -r requirements.txt
-
-
-Create a .env file in the backend directory:
-
-env
-GOOGLE_PLACES_API_KEY=your_google_places_api_key
-
-
-Replace the placeholder with your actual Google Places API key.
-
-Run the Django development server:
-
-bash
+```
+Create `backend/.env`:
+```
+GOOGLE_PLACES_API_KEY=your_key_here
+```
+```bash
 python manage.py runserver
+```
 
-
-Backend will be available at:
-
-text
-http://127.0.0.1:8000/
-
-3. Frontend Setup (React + TypeScript)
-
-Open another terminal and navigate to the frontend directory:
-
-bash
+**Frontend** (new terminal)
+```bash
 cd frontend
-
-
-Install dependencies:
-
-bash
 npm install
-
-
-Start the Vite development server:
-
-bash
 npm run dev
+```
+Open http://localhost:5173
 
+You need a Google Cloud project with **Places API (New)** enabled and billing set up to get an API key.
 
-Frontend will typically be available at:
+## API
 
-text
-http://localhost:5173/
+`GET /api/places/search/?query=coffee&latitude=27.7172&longitude=85.3240`
 
-🔑 Google Places API Configuration
+Returns a list of places with name, address, rating, review count, distance, open status, photo, and a Maps link.
 
-CafeFinder uses Google Places API (New) to retrieve nearby restaurants and cafes.
+## Limitations
 
-To configure the API:
+- Data depends on Google Places, so photos and opening hours aren't always available
+- Google API usage may cost money
+- No database; everything is fetched live
 
-Open Google Cloud Console.
-Create or select a Google Cloud project.
-Enable the Places API (New).
-Set up billing for the project.
-Generate an API key.
-Store the API key in the backend .env file.
+## Project Structure
 
-Important Security Notes:
-
-Never expose your Google API key in React frontend code.
-Never upload your .env file to GitHub.
-Restrict your API key to the required API and appropriate server-side usage.
-Keep your API key private.
-🔄 How It Works
-
-CafeFinder follows a simple client-server architecture.
-
-text
-           USER
-             |
-             v
-     React + TypeScript
-             |
-             v
-      Enter Food Keywords
-             |
-             v
-       Share Location
-             |
-             v
-      Axios API Request
-             |
-             v
-       Django Backend
-             |
-             v
-      Google Places API
-             |
-             v
-       Process Results
-             |
-             v
-       JSON Response
-             |
-             v
-      React Frontend
-             |
-             v
-    Restaurant Recommendation
-           Cards
-
-Search Workflow
-The user enters one or more food or drink keywords.
-The user clicks the Use My Location button.
-The browser requests location permission.
-React obtains the user's latitude and longitude.
-React sends the search query and coordinates to Django.
-Django communicates with Google Places API.
-The backend processes and combines the results.
-Duplicate restaurants are removed.
-React displays the restaurant recommendations.
-
-If location permission is denied, users can try again or use the manual location search option if configured.
-
-🔌 API Endpoint
-
-CafeFinder provides a Django REST API endpoint for restaurant searches.
-
-Search Nearby Restaurants
-
-Endpoint:
-
-http
-GET /api/places/search/
-
-
-Example Request:
-
-http
-GET http://127.0.0.1:8000/api/places/search/?query=coffee&latitude=27.7172&longitude=85.3240
-
-
-Query Parameters:
-
-Parameter	Description
-query	Food or drink search keyword
-latitude	User's latitude
-longitude	User's longitude
-
-Example Response:
-
-json
-{
-  "results": [
-    {
-      "id": "place_id_example",
-      "name": "Example Coffee House",
-      "address": "Kathmandu, Nepal",
-      "rating": 4.5,
-      "review_count": 120,
-      "latitude": 27.7172,
-      "longitude": 85.3240,
-      "is_open": true,
-      "photo_url": null,
-      "distance": 1.2,
-      "maps_url": "https://www.google.com/maps/search/?api=1&query=Example+Coffee+House"
-    }
-  ]
-}
-
-
-Note: The response above is an illustrative example. Actual fields depend on the information returned by Google Places API.
-
-🎨 Design Philosophy
-
-CafeFinder focuses on a clean, modern, and user-friendly experience.
-
-Warm cream and coffee-inspired color palette.
-Minimal and attractive interface.
-Rounded search input and buttons.
-Clean restaurant recommendation cards.
-Responsive layouts for different screen sizes.
-Simple hover interactions.
-Clear loading, error, and empty-result states.
-
-The goal is to make discovering nearby food and cafes simple and enjoyable.
-
-🚀 Future Improvements
-
-Possible improvements for future versions:
-
-User authentication and personalized profiles.
-Save favorite restaurants.
-Search history.
-Advanced restaurant filters.
-Interactive Google Maps integration.
-Restaurant reviews and recommendations.
-More advanced food preference matching.
-Deployment with a production-ready configuration.
-🔒 Limitations
-Restaurant information depends on Google Places API availability.
-API usage may incur charges depending on Google Cloud pricing and usage.
-Restaurant images and opening hours may not always be available.
-Location accuracy depends on the user's device and browser.
-Search results depend on Google's available place data.
-The first version does not store restaurant information in a database.
-👨‍💻 Developer
-
-Developed as a Full-Stack Web Development Project
-
-Technologies: React, TypeScript, Django, Django REST Framework, and Google Places API.
-
-Project: CafeFinder
-Category: Full-Stack Web Application
-Purpose: Nearby Cafe & Restaurant Discovery
-
-📄 License
-
-This project is developed for educational and portfolio purposes.
-
-You may modify and extend it for your own learning and development projects.s
+```
+CafeFinder/
+├── backend/    # Django + DRF (config/, places/)
+└── frontend/   # React + TypeScript (src/components, src/services)
+```
