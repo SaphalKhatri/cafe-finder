@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "https://cafe-finder-blue.vercel.app/",
+    "https://crave.khatrisaphal.com.np/",
     ".vercel.app",
 ]
 
@@ -64,10 +64,10 @@ MIDDLEWARE = [
 # CORS Configuration: Allow Vite's default dev server ports
 CORS_ALLOWED_ORIGINS = [
  
-    "https://cafe-finder-blue.vercel.app/",    #change his too
+    "https://crave.khatrisaphal.com.np/",    #change his too
 ]
 CSRF_TRUSTED_ORIGINS = [
-    "https://cafe-finder-blue.vercel.app",
+    "https://crave.khatrisaphal.com.np/",
 ]
 
 ROOT_URLCONF = 'cafefinder_backend.urls'
