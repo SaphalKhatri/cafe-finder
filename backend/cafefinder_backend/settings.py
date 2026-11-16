@@ -31,8 +31,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["https://cafe-finder-blue.vercel.app/"]
-
+ALLOWED_HOSTS = [
+    "cafe-finder-backend-plum.vercel.app",
+    ".vercel.app",
+]
 
 # Application definition
 
