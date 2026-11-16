@@ -61,10 +61,12 @@ MIDDLEWARE = [
 
 # CORS Configuration: Allow Vite's default dev server ports
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+ 
     "https://cafe-finder-blue.vercel.app/",    #change his too
 ]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://cafe-finder-blue.vercel.app",
+]
 
 ROOT_URLCONF = 'cafefinder_backend.urls'
 
