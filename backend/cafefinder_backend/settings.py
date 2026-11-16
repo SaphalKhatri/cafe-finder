@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "cafe-finder-backend-plum.vercel.app",
+    "https://cafe-finder-blue.vercel.app/",
     ".vercel.app",
 ]
 
