@@ -1,5 +1,6 @@
 import math
 import requests
+from urllib.parse import quote
 from django.conf import settings
 
 PLACES_API_URL = "https://places.googleapis.com/v1/places:searchText"
@@ -106,10 +107,10 @@ def search_nearby_places(query: str, lat: float | None = None, lng: float | None
             if photos and len(photos) > 0:
                 photo_name = photos[0].get("name")
                 if photo_name:
-                    photo_url = (
-                        f"https://places.googleapis.com/v1/{photo_name}/media"
-                        f"?maxHeightPx=400&maxWidthPx=600&key={api_key}"
-                    )
+                    safe_name = quote(photo_name, safe="")
+                    photo_url = f"https://127.0.0.1:8000/api/places/photo/?name={safe_name}"
+                       
+                    
 
             # Check open status
             opening_hours = place.get("currentOpeningHours", {})

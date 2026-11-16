@@ -3,7 +3,8 @@ import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
+from urllib.parse import unquote
+from django.http import HttpResponse,HttpResponseNotFound
 from .services import search_nearby_places
 
 logger = logging.getLogger(__name__)
@@ -56,3 +57,53 @@ class PlaceSearchView(APIView):
                 {"error": "An unexpected error occurred while processing your request."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+class PlacePhotoView(APIView):
+   
+
+    def get(self, request):
+        raw_name = request.query_params.get("name")
+        if not raw_name:
+            return HttpResponseNotFound("Photo name is missing.")
+
+        # Decode in case URL had encoded slashes
+        photo_name = unquote(raw_name)
+
+        api_key = settings.GOOGLE_PLACES_API_KEY
+        # Google Places API (New) photo media endpoint
+        media_url = f"https://places.googleapis.com/v1/{photo_name}/media"
+        
+        headers = {
+            "X-Goog-Api-Key": api_key,
+        }
+        params = {
+            "maxHeightPx": 400,
+            "maxWidthPx": 600,
+            "key": api_key,
+        }
+
+        try:
+            # allow_redirects=True follows Google's CDN redirect and grabs the JPEG
+            res = requests.get(
+                media_url,
+                headers=headers,
+                params=params,
+                allow_redirects=True,
+                timeout=10,
+            )
+
+            if res.status_code == 200:
+                content_type = res.headers.get("Content-Type", "image/jpeg")
+                # Return the image binary directly to the browser
+                response = HttpResponse(res.content, content_type=content_type)
+                # Cache for 1 day in user's browser to save Google API quota
+                response["Cache-Control"] = "public, max-age=86400"
+                return response
+            else:
+                print(f"[GOOGLE PHOTO ERROR] Status: {res.status_code}, Body: {res.text}")
+                return HttpResponseNotFound("Photo not found on Google.")
+        except Exception as e:
+            print(f"[PHOTO PROXY EXCEPTION]: {e}")
+            return HttpResponseNotFound()
+
+
