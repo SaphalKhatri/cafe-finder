@@ -25,10 +25,11 @@ GOOGLE_PLACES_API_KEY= os.getenv("GOOGLE_PLACES_API_KEY")
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k9az)g)%3g&2+9h)2-!^xv4ez5fe_7e6n)twn$dzfxvclsc%!#'
+SECRET_KEY = os.getenv("SECRET_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -61,7 +62,7 @@ MIDDLEWARE = [
 # CORS Configuration: Allow Vite's default dev server ports
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "http://127.0.0.1:5173",  
+    "http://127.0.0.1:5173",    #change his too
 ]
 
 
