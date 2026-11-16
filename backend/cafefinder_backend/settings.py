@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["https://cafe-finder-blue.vercel.app/"]
 
 
 # Application definition
@@ -62,7 +62,7 @@ MIDDLEWARE = [
 # CORS Configuration: Allow Vite's default dev server ports
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "http://127.0.0.1:5173",    #change his too
+    "https://cafe-finder-blue.vercel.app/",    #change his too
 ]
 
 
