@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from urllib.parse import unquote
 from django.http import HttpResponse,HttpResponseNotFound
-from .services import search_nearby_places
+from .services import search_nearby_places,get_place_details
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +58,29 @@ class PlaceSearchView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
+from .services import search_nearby_places, get_place_details
+
+class PlaceDetailView(APIView):
+    """
+    GET /api/places/<place_id>/?latitude=...&longitude=...
+    """
+    def get(self, request, place_id):
+        lat_param = request.query_params.get("latitude")
+        lng_param = request.query_params.get("longitude")
+
+        lat, lng = None, None
+        try:
+            if lat_param and lng_param:
+                lat, lng = float(lat_param), float(lng_param)
+        except ValueError:
+            pass
+
+        place = get_place_details(place_id, lat=lat, lng=lng)
+        if not place:
+            return Response({"error": "Place not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(place, status=status.HTTP_200_OK)
+        
 class PlacePhotoView(APIView):
    
 

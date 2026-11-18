@@ -66,6 +66,41 @@ def fetch_places_for_keyword(keyword: str, lat: float | None = None, lng: float 
     data = response.json()
     return data.get("places", [])
 
+def format_place(place: dict, lat: float | None = None, lng: float | None = None) -> dict:
+    place_id = place.get("id")
+    place_location = place.get("location", {})
+    place_lat = place_location.get("latitude")
+    place_lng = place_location.get("longitude")
+
+    distance_km = None
+    if lat is not None and lng is not None and place_lat and place_lng:
+        distance_km = calculate_distance(lat, lng, place_lat, place_lng)
+
+    photo_url = None
+    photos = place.get("photos", [])
+    if photos and len(photos) > 0:
+        photo_name = photos[0].get("name")
+        if photo_name:
+            safe_name = quote(photo_name, safe="")
+            photo_url = f"/api/places/photo/?name={safe_name}"
+
+    opening_hours = place.get("currentOpeningHours", {})
+    type_info = place.get("primaryTypeDisplayName", {})
+
+    return {
+        "id": place_id,
+        "name": place.get("displayName", {}).get("text", "Unknown Place"),
+        "address": place.get("formattedAddress", "Address not available"),
+        "rating": place.get("rating"),
+        "user_ratings_total": place.get("userRatingCount", 0),
+        "is_open": opening_hours.get("openNow"),
+        "distance_km": distance_km,
+        "latitude": place_lat,    # <-- Needed for React Native Maps!
+        "longitude": place_lng,  # <-- Needed for React Native Maps!
+        "photo_url": photo_url,
+        "maps_url": place.get("googleMapsUri"),
+        "category": type_info.get("text", "Cafe / Restaurant"),
+    }
 
 def search_nearby_places(query: str, lat: float | None = None, lng: float | None = None) -> list:
     """
@@ -145,3 +180,22 @@ def search_nearby_places(query: str, lat: float | None = None, lng: float | None
         )
 
     return standardized_results
+
+
+def get_place_details(place_id: str, lat: float | None = None, lng: float | None = None) -> dict | None:
+    """Fetch details for a single place by place_id."""
+    api_key = settings.GOOGLE_PLACES_API_KEY
+    url = f"https://places.googleapis.com/v1/places/{place_id}"
+    headers = {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": api_key,
+        "X-Goog-FieldMask": (
+            "id,displayName,formattedAddress,rating,userRatingCount,"
+            "location,currentOpeningHours,photos,googleMapsUri,primaryTypeDisplayName"
+        ),
+    }
+
+    res = requests.get(url, headers=headers, timeout=10)
+    if res.status_code == 200:
+        return format_place(res.json(), lat, lng)
+    return None
