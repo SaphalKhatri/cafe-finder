@@ -6,6 +6,7 @@ from rest_framework import status
 from urllib.parse import unquote
 from django.http import HttpResponse,HttpResponseNotFound
 from .services import search_nearby_places,get_place_details
+from .models import Favorite
 
 logger = logging.getLogger(__name__)
 
@@ -129,4 +130,85 @@ class PlacePhotoView(APIView):
             print(f"[PHOTO PROXY EXCEPTION]: {e}")
             return HttpResponseNotFound()
 
+
+
+class FavoriteListCreateView(APIView):
+   
+
+    def get(self, request):
+        favorites = Favorite.objects.all()
+        results = []
+        for fav in favorites:
+            results.append({
+                "id": fav.place_id,
+                "name": fav.name or "Saved Cafe",
+                "address": fav.address or "",
+                "rating": fav.rating,
+                "user_ratings_total": fav.user_ratings_total,
+                "is_open": None,
+                "distance_km": None,
+                "latitude": fav.latitude,
+                "longitude": fav.longitude,
+                "photo_url": fav.photo_url,
+                "maps_url": None,
+                "category": fav.category or "Cafe",
+                "created_at": fav.created_at,
+            })
+
+        return Response(results, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        place_id = request.data.get("place_id")
+        if not place_id:
+            return Response(
+                {"error": "The 'place_id' field is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Create or update favorite snapshot
+        favorite, created = Favorite.objects.update_or_create(
+            place_id=place_id,
+            defaults={
+                "name": request.data.get("name"),
+                "address": request.data.get("address"),
+                "rating": request.data.get("rating"),
+                "user_ratings_total": request.data.get("user_ratings_total", 0),
+                "photo_url": request.data.get("photo_url"),
+                "category": request.data.get("category"),
+                "latitude": request.data.get("latitude"),
+                "longitude": request.data.get("longitude"),
+            },
+        )
+
+        return Response(
+            {
+                "message": "Cafe saved to favorites.",
+                "place_id": favorite.place_id,
+                "created": created,
+            },
+            status=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
+        )
+
+
+class FavoriteDetailView(APIView):
+    """
+    GET    /api/favorites/<place_id>/ -> Check if cafe is favorited
+    DELETE /api/favorites/<place_id>/ -> Remove cafe from favorites
+    """
+
+    def get(self, request, place_id):
+        is_favorite = Favorite.objects.filter(place_id=place_id).exists()
+        return Response({"is_favorite": is_favorite}, status=status.HTTP_200_OK)
+
+    def delete(self, request, place_id):
+        deleted_count, _ = Favorite.objects.filter(place_id=place_id).delete()
+        if deleted_count > 0:
+            return Response(
+                {"message": "Favorite removed successfully."},
+                status=status.HTTP_200_OK,
+            )
+        return Response(
+            {"message": "Favorite not found."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
 
