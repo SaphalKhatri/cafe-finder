@@ -19,11 +19,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*'
-    #"https://crave.khatrisaphal.com.np/",
-   # ".vercel.app",
+ALLOWED_HOSTS = [
+    "https://crave.khatrisaphal.com.np/",
+   ".vercel.app",
 ]
 
 # Application definition
@@ -52,7 +52,6 @@ MIDDLEWARE = [
 ]
 
 # CORS Configuration: Allow Vite's default dev server ports
-CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
 
    "https://crave.khatrisaphal.com.np",    #change his too
