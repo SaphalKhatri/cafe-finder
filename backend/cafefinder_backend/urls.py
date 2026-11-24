@@ -20,4 +20,6 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/places/', include('places.urls')),
+     path('api/favorites/', FavoriteListCreateView.as_view(), name='favorites-list-create'),
+    path('api/favorites/<str:place_id>/', FavoriteDetailView.as_view(), name='favorites-detail'),
 ]
