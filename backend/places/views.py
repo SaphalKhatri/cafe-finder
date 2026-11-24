@@ -58,7 +58,7 @@ class PlaceSearchView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-from .services import search_nearby_places, get_place_details
+
 
 class PlaceDetailView(APIView):
     """

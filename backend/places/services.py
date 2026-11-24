@@ -73,7 +73,7 @@ def format_place(place: dict, lat: float | None = None, lng: float | None = None
     place_lng = place_location.get("longitude")
 
     distance_km = None
-    if lat is not None and lng is not None and place_lat and place_lng:
+    if(lat is not None and lng is not None and place_lat and place_lng):
         distance_km = calculate_distance(lat, lng, place_lat, place_lng)
 
     photo_url = None
@@ -143,7 +143,7 @@ def search_nearby_places(query: str, lat: float | None = None, lng: float | None
                 photo_name = photos[0].get("name")
                 if photo_name:
                     safe_name = quote(photo_name, safe="")
-                    photo_url = f"https://127.0.0.1:8000/api/places/photo/?name={safe_name}"
+                    photo_url = f"/api/places/photo/?name={safe_name}"
                        
                     
 
@@ -163,13 +163,16 @@ def search_nearby_places(query: str, lat: float | None = None, lng: float | None
                 "user_ratings_total": place.get("userRatingCount", 0),
                 "is_open": is_open,
                 "distance_km": distance_km,
+                #CORODINATES FOR REACT NATIVE
+                "latitude":place_lat,
+                "longitude":place_lng,
                 "photo_url": photo_url,
                 "maps_url": place.get("googleMapsUri"),
                 "category": category,
             })
 
     # Sort results by distance if distance is available, otherwise by rating
-    if lat is not None and lng is not None:
+    if(lat is not None and lng is not None):
         standardized_results.sort(
             key=lambda item: (item["distance_km"] if item["distance_km"] is not None else float("inf"))
         )
